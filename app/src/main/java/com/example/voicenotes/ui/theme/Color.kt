@@ -1,4 +1,4 @@
-package com.example.voicenotes.presentation.theme
+package com.example.voicenotes.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
