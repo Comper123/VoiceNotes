@@ -40,6 +40,7 @@ android {
         compose = true
     }
 }
+private fun DependencyHandlerScope.ksp(string: String) {}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -57,4 +58,22 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.activity:activity-compose:1.8.0")
+
+    // SQLite (Room - обёртка над sqlite)
+    implementation("androidx.room:room-runtime:2.6.0")
+    implementation("androidx.room:room-ktx:2.6.0")
+    ksp("androidx.room:room-compiler:2.6.0")
+
+    // Аудио запись
+    implementation("androidx.media:media:1.7.0")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // Разрешения
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 }
