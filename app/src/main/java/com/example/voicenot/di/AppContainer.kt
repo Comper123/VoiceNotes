@@ -17,8 +17,12 @@ class AppContainer(private val context: Context) {
         database.voiceNoteDao()
     }
 
+    private val folderDao by lazy {
+        database.folderDao()
+    }
+
     val repository: VoiceNoteRepository by lazy {
-        VoiceNoteRepositoryImpl(voiceNoteDao)
+        VoiceNoteRepositoryImpl(voiceNoteDao, folderDao)
     }
 
     val audioRecorder: AudioRecorder by lazy {

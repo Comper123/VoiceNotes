@@ -1,35 +1,25 @@
+// model/entities/VoiceNoteEntity.kt
 package com.example.voicenot.model.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.ColumnInfo
+import androidx.room.TypeConverters
+import com.example.voicenot.model.database.Converters
+import java.util.Date
 
 @Entity(tableName = "voice_notes")
+@TypeConverters(Converters::class)
 data class VoiceNoteEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
-    @ColumnInfo(name = "title")
     val title: String,
-
-    @ColumnInfo(name = "file_path")
+    val content: String,
     val filePath: String,
-
-    @ColumnInfo(name = "duration")
     val duration: Long,
-
-    @ColumnInfo(name = "file_size")
     val fileSize: Long,
-
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long,
-
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long,
-
-    @ColumnInfo(name = "transcription")
-    val transcription: String? = null,
-
-    @ColumnInfo(name = "is_favorite")
-    val isFavorite: Boolean = false
+    val createdAt: Date,
+    val updatedAt: Date,
+    val folderId: Long,
+    val tags: String, // JSON строка
+    val isFavorite: Boolean
 )
