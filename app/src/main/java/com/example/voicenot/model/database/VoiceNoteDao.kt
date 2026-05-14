@@ -41,4 +41,10 @@ interface VoiceNoteDao {
 
     @Query("UPDATE voice_notes SET folderId = :newFolderId WHERE folderId = :oldFolderId")
     suspend fun moveNotesToFolder(oldFolderId: Long, newFolderId: Long)
+
+    @Query("UPDATE voice_notes SET content = :content WHERE id = :id")
+    suspend fun updateNoteContent(id: Long, content: String)
+
+    @Query("UPDATE voice_notes SET tags = :tags WHERE id = :id")
+    suspend fun updateNoteTags(id: Long, tags: String)
 }

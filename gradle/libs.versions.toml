@@ -18,6 +18,8 @@ coroutines = "1.7.3"
 
 # Media
 media = "1.7.0"
+cameraCamera2Pipe = "1.6.1"
+media3CommonKtx = "1.10.1"
 
 [libraries]
 # Core Android
@@ -47,6 +49,8 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 
 # Media
 media = { group = "androidx.media", name = "media", version.ref = "media" }
+camera-camera2-pipe = { group = "androidx.camera", name = "camera-camera2-pipe", version.ref = "cameraCamera2Pipe" }
+media3-common-ktx = { group = "androidx.media3", name = "media3-common-ktx", version.ref = "media3CommonKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

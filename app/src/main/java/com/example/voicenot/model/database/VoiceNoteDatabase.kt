@@ -16,7 +16,7 @@ import com.example.voicenot.model.entities.FolderEntity
 @TypeConverters(Converters::class)
 abstract class VoiceNoteDatabase : RoomDatabase() {
     abstract fun voiceNoteDao(): VoiceNoteDao
-    abstract fun folderDao(): FolderDao  // ← ДОБАВЬТЕ ЭТУ СТРОКУ
+    abstract fun folderDao():   FolderDao
 
     companion object {
         @Volatile

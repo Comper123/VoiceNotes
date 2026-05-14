@@ -2,6 +2,7 @@ package com.example.voicenot.audio
 
 import android.content.Context
 import android.media.MediaRecorder
+import android.util.Log
 import java.io.File
 
 class AudioRecorder(private val context: Context) {
@@ -11,9 +12,15 @@ class AudioRecorder(private val context: Context) {
 
     fun startRecording(): Boolean {
         return try {
-            // Создаём уникальное имя файла
-            val timestamp = System.currentTimeMillis()
-            currentFilePath = File(context.cacheDir, "recording_$timestamp.m4a").absolutePath
+            // Создаём папку для записей
+            val recordingsDir = File(context.filesDir, "recordings")
+            if (!recordingsDir.exists()) {
+                recordingsDir.mkdirs()
+                Log.d("AudioRecorder", "Создана папка: ${recordingsDir.absolutePath}")
+            }
+
+            currentFilePath = File(recordingsDir, "recording_${System.currentTimeMillis()}.m4a").absolutePath
+            Log.d("AudioRecorder", "Файл: $currentFilePath")
 
             mediaRecorder = MediaRecorder().apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -24,29 +31,33 @@ class AudioRecorder(private val context: Context) {
                 start()
             }
             startTime = System.currentTimeMillis()
+            Log.d("AudioRecorder", "Запись начата")
             true
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("AudioRecorder", "Ошибка: ${e.message}", e)
             false
         }
     }
 
     fun stopRecording(): String? {
         return try {
-            if (mediaRecorder != null) {
-                mediaRecorder?.apply {
-                    try {
-                        stop()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    release()
-                }
-                mediaRecorder = null
+            mediaRecorder?.apply {
+                stop()
+                release()
             }
-            currentFilePath.takeIf { it.isNotEmpty() }
+            mediaRecorder = null
+            Log.d("AudioRecorder", "Запись остановлена. Путь: $currentFilePath")
+
+            val file = File(currentFilePath)
+            if (file.exists() && file.length() > 0) {
+                Log.d("AudioRecorder", "Файл сохранён, размер: ${file.length()} байт")
+                currentFilePath
+            } else {
+                Log.e("AudioRecorder", "Файл пустой или не существует!")
+                null
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("AudioRecorder", "Ошибка: ${e.message}", e)
             null
         }
     }
@@ -55,13 +66,5 @@ class AudioRecorder(private val context: Context) {
         return if (mediaRecorder != null) {
             System.currentTimeMillis() - startTime
         } else 0L
-    }
-
-    fun getMaxAmplitude(): Int {
-        return try {
-            mediaRecorder?.maxAmplitude ?: 0
-        } catch (e: Exception) {
-            0
-        }
     }
 }

@@ -3,8 +3,8 @@ package com.example.voicenot.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.voicenot.audio.AudioPlayer
-import com.example.voicenot.model.VoiceNote
-import com.example.voicenot.model.repository.VoiceNoteRepository
+import com.example.voicenot.model.database.VoiceNoteDao
+import com.example.voicenot.model.entities.VoiceNoteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class PlayerUiState(
-    val note: VoiceNote? = null,
+    val note: VoiceNoteEntity? = null,
     val isPlaying: Boolean = false,
     val currentPosition: Int = 0,
     val isLoading: Boolean = false,
@@ -30,7 +30,7 @@ sealed class PlayerEvent {
 }
 
 class PlayerViewModel(
-    private val repository: VoiceNoteRepository
+    private val voiceNoteDao: VoiceNoteDao
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PlayerUiState())
@@ -43,7 +43,7 @@ class PlayerViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                val note = repository.getNoteById(noteId)
+                val note = voiceNoteDao.getNoteById(noteId)
                 _uiState.update { it.copy(note = note, isLoading = false) }
 
                 note?.let {
@@ -122,8 +122,8 @@ class PlayerViewModel(
         viewModelScope.launch {
             _uiState.value.note?.let { note ->
                 try {
-                    repository.toggleFavorite(note.id)
-                    val updatedNote = repository.getNoteById(note.id)
+                    voiceNoteDao.updateFavoriteStatus(note.id, !note.isFavorite)
+                    val updatedNote = voiceNoteDao.getNoteById(note.id)
                     _uiState.update { it.copy(note = updatedNote) }
                 } catch (e: Exception) {
                     _uiState.update { it.copy(error = "Ошибка: ${e.message}") }
